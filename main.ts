@@ -1,9 +1,13 @@
-import { Plugin, TextFileView, WorkspaceLeaf, setIcon, TFile, Notice, Platform } from 'obsidian';
+import { Plugin, TextFileView, setIcon, TFile, Notice, Platform } from 'obsidian';
 
 declare module 'obsidian' {
 	interface App {
 		/** Undocumented: opens a vault file with the OS's default application. */
 		openWithDefaultApp(path: string): void;
+		/** Undocumented: registry of Obsidian's built-in ("core") plugins. */
+		internalPlugins: {
+			plugins: Record<string, { enabled: boolean } | undefined>;
+		};
 	}
 }
 
@@ -138,7 +142,7 @@ class UrlFileView extends TextFileView {
 			});
 			setIcon(openWebViewerBtn, 'app-window');
 			openWebViewerBtn.createSpan({ text: 'Open in web viewer' });
-			openWebViewerBtn.addEventListener('click', () => this.openInWebViewer());
+			openWebViewerBtn.addEventListener('click', () => { void this.openInWebViewer(); });
 		}
 
 		const convertBtn = actions.createEl('button', {
@@ -147,7 +151,7 @@ class UrlFileView extends TextFileView {
 		});
 		setIcon(convertBtn, 'notebook-text');
 		convertBtn.createSpan({ text: 'Convert to .md' });
-		convertBtn.addEventListener('click', () => this.convertToMarkdown());
+		convertBtn.addEventListener('click', () => { void this.convertToMarkdown(); });
 	}
 
 	private getValidatedUrl(): string | null {
@@ -176,8 +180,7 @@ class UrlFileView extends TextFileView {
 	}
 
 	private isWebViewerEnabled(): boolean {
-		const internalPlugins = (this.app as any).internalPlugins;
-		return internalPlugins?.plugins?.['webviewer']?.enabled === true;
+		return this.app.internalPlugins.plugins['webviewer']?.enabled === true;
 	}
 
 	private async openInWebViewer(): Promise<void> {
@@ -314,14 +317,14 @@ export default class UrlPreviewPlugin extends Plugin {
 	private attachExplorerDblClick(): void {
 		for (const leaf of this.app.workspace.getLeavesOfType('file-explorer')) {
 			this.registerDomEvent(
-				(leaf.view as any).containerEl as HTMLElement,
+				leaf.view.containerEl,
 				'dblclick',
 				(evt: MouseEvent) => {
 					const navItem = (evt.target as HTMLElement)
 						.closest<HTMLElement>('.nav-file-title[data-path]');
 					if (!navItem) return;
 					const path = navItem.dataset['path'];
-					if (path?.endsWith('.url')) this.openUrlFromFile(path);
+					if (path?.endsWith('.url')) void this.openUrlFromFile(path);
 				}
 			);
 		}
@@ -345,9 +348,5 @@ export default class UrlPreviewPlugin extends Plugin {
 		}
 
 		window.open(url, '_blank', 'noopener,noreferrer');
-	}
-
-	async onunload(): Promise<void> {
-		this.app.workspace.detachLeavesOfType(VIEW_TYPE_URL);
 	}
 }
