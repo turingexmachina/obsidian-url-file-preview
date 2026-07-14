@@ -1,10 +1,10 @@
 {
-  "id": "url-file-preview",
-  "name": "URL File Preview",
-  "version": "1.0.0",
-  "minAppVersion": "1.6.6",
-  "description": "Preview and edit Windows .url shortcut files — edit the URL inline, open in your default app or the web viewer, and convert to a Markdown note.",
-  "author": "turingexmachina",
-  "authorUrl": "https://github.com/turingexmachina",
-  "isDesktopOnly": false
+	"id": "url-file-preview",
+	"name": "URL File Preview",
+	"version": "1.0.1",
+	"minAppVersion": "1.6.6",
+	"description": "Preview and edit Windows .url shortcut files — edit the URL inline, open in your default app or the web viewer, and convert to a Markdown note.",
+	"author": "turingexmachina",
+	"authorUrl": "https://github.com/turingexmachina",
+	"isDesktopOnly": false
 }
