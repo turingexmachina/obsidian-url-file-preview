@@ -1,6 +1,6 @@
 {
   "name": "obsidian-url-file-preview",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Preview and edit Windows .url shortcut files in Obsidian, with quick actions to open or convert them.",
   "main": "main.js",
   "scripts": {
