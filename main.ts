@@ -152,6 +152,14 @@ class UrlFileView extends TextFileView {
 		setIcon(convertBtn, 'notebook-text');
 		convertBtn.createSpan({ text: 'Convert to .md' });
 		convertBtn.addEventListener('click', () => { void this.convertToMarkdown(); });
+
+		const deleteBtn = actions.createEl('button', {
+			cls: 'url-preview-btn url-preview-action-btn url-preview-delete-btn',
+			title: 'Delete file',
+		});
+		setIcon(deleteBtn, 'trash-2');
+		deleteBtn.createSpan({ text: 'Delete' });
+		deleteBtn.addEventListener('click', () => { void this.deleteFile(); });
 	}
 
 	private getValidatedUrl(): string | null {
@@ -218,6 +226,12 @@ class UrlFileView extends TextFileView {
 		await leaf.openFile(newFile);
 		await this.app.fileManager.trashFile(file);
 		new Notice(`Converted to ${newFile.basename}.md`);
+	}
+
+	private async deleteFile(): Promise<void> {
+		const file = this.file;
+		if (!file) return;
+		await this.app.fileManager.promptForDeletion(file);
 	}
 
 	private buildField(

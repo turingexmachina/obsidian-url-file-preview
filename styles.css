@@ -158,6 +158,16 @@
   border-color: var(--interactive-accent-hover);
 }
 
+.url-preview-btn.url-preview-delete-btn {
+  color: var(--text-error);
+  border-color: var(--text-error);
+}
+
+.url-preview-btn.url-preview-delete-btn:hover {
+  background: var(--background-modifier-hover);
+  border-color: var(--text-error);
+}
+
 /* ── Card actions row ── */
 
 .url-preview-card-actions {
